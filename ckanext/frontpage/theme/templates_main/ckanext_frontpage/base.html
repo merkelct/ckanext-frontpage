@@ -1,0 +1,24 @@
+{% extends 'page.html' %}
+
+{% block styles %}
+  {{ super() }}
+  {% resource 'frontpage-theme/styles/frontpage.css' %}
+{% endblock %}
+
+{% block page_header %}{% endblock %}
+
+{% block secondary_content %}
+
+  <div class="module module-narrow module-shallow">
+    <h2 class="module-heading">
+      <i class="icon-info-sign"></i>
+      {{ _('What are Frontpage?') }}
+    </h2>
+    <div class="module-content">
+      {% trans %}
+        <p>Frontpage are are simple way to add extra frontpage to your ckan instance. You can assign an order to them.</p>
+      {% endtrans %}
+    </div>
+  </div>
+
+{% endblock %}
