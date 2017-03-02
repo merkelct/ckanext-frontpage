@@ -90,6 +90,14 @@ def get_recent_blog_posts(number=5, exclude=None):
     return new_list
 
 
+def get_frontpage_content(page_type='page', page=None ):
+    page_content = p.toolkit.get_action('ckanext_frontpage_show')(
+        None, {'page_type': page_type, 'page': page}
+    )
+
+    return page_content
+
+
 class FrontpagePlugin(FrontpagePluginBase):
     p.implements(p.IConfigurer, inherit=True)
     p.implements(p.ITemplateHelpers, inherit=True)
@@ -124,7 +132,8 @@ class FrontpagePlugin(FrontpagePluginBase):
             'build_nav_main': build_frontpage_nav_main,
             'render_content': render_content,
             'get_wysiwyg_editor': get_wysiwyg_editor,
-            'get_recent_blog_posts': get_recent_blog_posts
+            'get_recent_blog_posts': get_recent_blog_posts,
+            'get_frontpage_content': get_frontpage_content
         }
 
     def after_map(self, map):

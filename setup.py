@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 version = '0.1'
 
 setup(
-	name='ckanext-pages',
+	name='ckanext-frontpage',
 	version=version,
 	description='Basic CMS extension for ckan',
 	long_description='',
@@ -26,8 +26,8 @@ setup(
 	entry_points=\
 	"""
         [ckan.plugins]
-        pages=ckanext.pages.plugin:PagesPlugin
-        textboxview=ckanext.pages.plugin:TextBoxView
+        frontpage=ckanext.frontpage.plugin:FrontpagePlugin
+        textboxview=ckanext.frontpage.plugin:TextBoxView
         [babel.extractors]
         ckan = ckan.lib.extract:extract_ckan
 
@@ -36,7 +36,7 @@ setup(
         'ckanext': [
             ('**.py', 'python', None),
             ('**.js', 'javascript', None),
-            ('**/pages/theme/**.html', 'ckan', None),
+            ('**/frontpage/theme/**.html', 'ckan', None),
         ],
     },
 )

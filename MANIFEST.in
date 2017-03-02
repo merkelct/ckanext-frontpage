@@ -1,3 +1,3 @@
-recursive-include    ckanext/pages/textbox        *
-recursive-include    ckanext/pages/theme          *
-recursive-include    ckanext/pages/fanstatic      *
+recursive-include    ckanext/frontpage/textbox        *
+recursive-include    ckanext/frontpage/theme          *
+recursive-include    ckanext/frontpage/fanstatic      *

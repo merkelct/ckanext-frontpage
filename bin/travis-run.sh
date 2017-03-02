@@ -10,4 +10,4 @@ sudo cp ckan/ckan/config/solr/schema.xml /etc/solr/conf/schema.xml
 sudo service jetty restart
 
 echo "Run tests..."
-nosetests --ckan --nologcapture --with-pylons=subdir/test.ini --reset-db --with-coverage --cover-package=ckanext.pages --cover-inclusive --cover-erase --cover-tests
+nosetests --ckan --nologcapture --with-pylons=subdir/test.ini --reset-db --with-coverage --cover-package=ckanext.frontpage --cover-inclusive --cover-erase --cover-tests
