@@ -1,7 +1,11 @@
 import ckan.plugins as p
 import ckan.lib.helpers as helpers
-from pylons import config
+import ckan.lib.base as base
 
+from pylons import config
+c = base.c
+request = base.request
+_ = base._
 
 _ = p.toolkit._
 
@@ -317,7 +321,22 @@ class FrontpageController(p.toolkit.BaseController):
     def blog_edit(self, page=None, data=None, errors=None, error_summary=None):
         return self.frontpage_edit(page=page, data=data, errors=errors, error_summary=error_summary, page_type='blog')
 
-    def frontpage_featured_orgs(self, data=None, errors=None, error_summary=None):
+    def frontpage_featured_orgs(self, path=None, data=None, errors=None, error_summary=None):
+
+        if p.toolkit.request.method == 'POST' and not data:
+            data = dict(p.toolkit.request.POST)
+            print data
+            try:
+                junk = p.toolkit.get_action('config_option_update')(
+                    {'user': c.user}, {'ckan.featured_orgs': 'twest'}
+                )
+            except p.toolkit.ValidationError, e:
+                errors = e.error_dict
+                error_summary = e.error_summary
+                return self.frontpage_featured_orgs('', data,
+                                       errors, error_summary)
+            p.toolkit.redirect_to(p.toolkit.url_for('frontdoor'))
+
         if not data:
             data = config['ckan.featured_orgs'].split(' ')
 

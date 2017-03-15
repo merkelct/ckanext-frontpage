@@ -13,7 +13,7 @@
   <div class="control-group">
     <label for="field-private" class="control-label">{{ _('Featured Orgs') }}</label>
     <div class="controls">
-    <select multiple="multiple" id="mu-select" name="mu-select[]">
+    <select multiple="multiple" id="mu-select" name="featured_orgs">
         {% for option in data %}
         <option value="{{ option }}" selected>{{ option|upper }}</option>
         {% endfor %}
