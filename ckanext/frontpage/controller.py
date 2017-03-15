@@ -2,6 +2,7 @@ import ckan.plugins as p
 import ckan.lib.helpers as helpers
 from pylons import config
 
+
 _ = p.toolkit._
 
 class FrontpageController(p.toolkit.BaseController):
@@ -313,9 +314,22 @@ class FrontpageController(p.toolkit.BaseController):
             p.toolkit.abort(404, _('Group not found'))
         return p.toolkit.render('ckanext_frontpage/confirm_delete.html', {'page': page})
 
-
     def blog_edit(self, page=None, data=None, errors=None, error_summary=None):
         return self.frontpage_edit(page=page, data=data, errors=errors, error_summary=error_summary, page_type='blog')
+
+    def frontpage_featured_orgs(self, data=None, errors=None, error_summary=None):
+        if not data:
+            data = config['ckan.featured_orgs'].split(' ')
+
+        errors = errors or {}
+        error_summary = error_summary or {}
+
+        form_snippet = config.get('ckanext.frontpage.form', 'ckanext_frontpage/forgs_base_form.html')
+
+        vars = {'data': data, 'errors': errors,
+                'error_summary': error_summary, 'form_snippet': form_snippet}
+
+        return p.toolkit.render('ckanext_frontpage/featured_orgs.html', extra_vars=vars)
 
     def frontpage_edit(self, page=None, data=None, errors=None, error_summary=None, page_type='frontpage'):
         if page:

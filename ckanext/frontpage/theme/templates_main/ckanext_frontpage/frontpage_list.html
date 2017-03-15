@@ -4,6 +4,9 @@
   {% if h.check_access('ckanext_frontpage_update', {}) %}
     {% link_for _('Add page'), controller='ckanext.frontpage.controller:FrontpageController', action='frontpage_edit', page='', class_='btn btn-primary', icon='plus-sign-alt' %}
   {% endif %}
+    {% if h.check_access('ckanext_frontpage_update', {}) %}
+        {% link_for _('Update Featured Orgs'), controller='ckanext.frontpage.controller:FrontpageController', action='frontpage_featured_orgs', page='', class_='btn btn-primary', icon='plus-sign-alt' %}
+  {% endif %}
 {% endblock %}
 
 {% block primary_content_inner %}

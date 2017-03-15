@@ -124,6 +124,19 @@ class FrontpagePlugin(FrontpagePluginBase):
         p.toolkit.add_resource('theme/resources', 'frontpage-theme')
         p.toolkit.add_public_directory(config, 'theme/public')
 
+    def update_config_schema(self, schema):
+
+        ignore_missing = toolkit.get_validator('ignore_missing')
+
+        schema.update({
+            # This is an existing CKAN core configuration option, we are just
+            # making it available to be editable at runtime
+            'ckan.featured_orgs': [ignore_missing]
+
+        })
+
+        return schema
+
     def configure(self, config):
         return
 
@@ -164,6 +177,8 @@ class FrontpagePlugin(FrontpagePluginBase):
                     action='frontpage_delete', ckan_icon='delete', controller=controller)
         map.connect('frontpage_edit', '/frontpage_edit{page:/.*|}',
                     action='frontpage_edit', ckan_icon='edit', controller=controller)
+        map.connect('frontpage_featured_orgs', '/featured_orgs.html}',
+                    action='frontpage_featured_orgs', ckan_icon='edit', controller=controller)
         map.connect('frontpage_index', '/frontpage',
                     action='frontpage_index', ckan_icon='file', controller=controller, highlight_actions='frontpage_edit frontpage_index frontpage_show')
         map.connect('frontpage_show', '/frontpage{page:/.*|}',
