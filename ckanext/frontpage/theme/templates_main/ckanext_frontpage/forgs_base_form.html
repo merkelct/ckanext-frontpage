@@ -1,5 +1,8 @@
 {% import 'macros/form.html' as form %}
-
+{% resource 'frontpage/js/jquery.multi-select.js' %}
+{% resource 'frontpage/js/orgs.js' %}
+{% set action_url = h.url_for('frontpage_featured_orgs') %}
+{% set cancel_url = h.url_for('frontpage_index') %}
 {% set data = data or {} %}
 {% set allorgs = h.organizations_available(permission='manage_group') %}
 
@@ -12,7 +15,7 @@
     <div class="controls">
     <select multiple="multiple" id="mu-select" name="mu-select[]">
         {% for option in data %}
-        <option value="{{ option }}" selected="selected">{{ option|upper }}</option>
+        <option value="{{ option }}" selected>{{ option|upper }}</option>
         {% endfor %}
       </select>
      <select id="mu-select" name="mu-select[]" multiple="multiple">
