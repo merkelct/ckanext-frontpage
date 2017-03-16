@@ -1,6 +1,7 @@
 import ckan.plugins as p
 import ckan.lib.helpers as helpers
 import ckan.lib.base as base
+from paste.util.multidict import MultiDict
 
 from pylons import config
 c = base.c
@@ -324,11 +325,20 @@ class FrontpageController(p.toolkit.BaseController):
     def frontpage_featured_orgs(self, path=None, data=None, errors=None, error_summary=None):
 
         if p.toolkit.request.method == 'POST' and not data:
-            data = dict(p.toolkit.request.POST)
+            data = MultiDict(p.toolkit.request.POST)
             print data
+            data = data.getall('new-featured-orgs')
+            forgs = ''
+            for i in range(len(data)):
+                data[i] = data[i].encode('utf-8')
+                forgs += data[i]
+                if i < len(data)-1:
+                    forgs += ' '
+
+            print forgs
             try:
                 junk = p.toolkit.get_action('config_option_update')(
-                    {'user': c.user}, {'ckan.featured_orgs': 'twest'}
+                    {'user': c.user}, {'ckan.featured_orgs': forgs}
                 )
             except p.toolkit.ValidationError, e:
                 errors = e.error_dict

@@ -5,7 +5,6 @@
 {% set cancel_url = h.url_for('frontpage_index') %}
 {% set data = data or {} %}
 {% set allorgs = h.organizations_available(permission='manage_group') %}
-
 {% set errors = errors or {} %}
 
 <form class="form-horizontal" method="post" action="{{ action_url }}" data-module="basic-form">
@@ -15,12 +14,12 @@
     <div class="controls">
     <select multiple="multiple" id="mu-select" name="featured_orgs">
         {% for option in data %}
-        <option value="{{ option }}" selected>{{ option|upper }}</option>
+        <option disabled value="{{ option }}" selected>{{ option|upper }}</option>
         {% endfor %}
       </select>
-     <select id="mu-select" name="mu-select[]" multiple="multiple">
+     <select name="new-featured-orgs" multiple>
         {% for option in allorgs %}
-        <option value="{{ option.display_name }}" >{{ option.display_name|upper }}</option>
+        <option value="{{ option.name }}" >{{ option.name|upper }}</option>
         {% endfor %}
       </select>
     </div>
