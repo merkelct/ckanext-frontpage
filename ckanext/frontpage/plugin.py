@@ -98,6 +98,12 @@ def get_frontpage_content(page_type='page', page=None ):
     return page_content
 
 
+def get_featured_org_count():
+        forgs = config['ckan.featured_orgs'].split(' ')
+        forgscnt = len(forgs)
+        return forgscnt
+
+
 class FrontpagePlugin(FrontpagePluginBase):
     p.implements(p.IConfigurer, inherit=True)
     p.implements(p.ITemplateHelpers, inherit=True)
@@ -146,7 +152,8 @@ class FrontpagePlugin(FrontpagePluginBase):
             'render_content': render_content,
             'get_wysiwyg_editor': get_wysiwyg_editor,
             'get_recent_blog_posts': get_recent_blog_posts,
-            'get_frontpage_content': get_frontpage_content
+            'get_frontpage_content': get_frontpage_content,
+            'get_featured_org_count': get_featured_org_count
         }
 
     def after_map(self, map):
