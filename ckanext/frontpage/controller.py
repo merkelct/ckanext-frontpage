@@ -326,7 +326,6 @@ class FrontpageController(p.toolkit.BaseController):
 
         if p.toolkit.request.method == 'POST' and not data:
             data = MultiDict(p.toolkit.request.POST)
-            print data
             data = data.getall('new-featured-orgs')
             forgs = ''
             for i in range(len(data)):
@@ -335,7 +334,6 @@ class FrontpageController(p.toolkit.BaseController):
                 if i < len(data)-1:
                     forgs += ' '
 
-            print forgs
             try:
                 junk = p.toolkit.get_action('config_option_update')(
                     {'user': c.user}, {'ckan.featured_orgs': forgs}
