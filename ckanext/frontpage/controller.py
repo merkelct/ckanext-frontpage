@@ -326,7 +326,7 @@ class FrontpageController(p.toolkit.BaseController):
 
         if p.toolkit.request.method == 'POST' and not data:
             data = MultiDict(p.toolkit.request.POST)
-            data = data.getall('new-featured-orgs')
+            data = data.getall('featured_orgs')
             forgs = ''
             for i in range(len(data)):
                 data[i] = data[i].encode('utf-8')
