@@ -67,7 +67,15 @@ ckanext.frontpage.editor = ckeditor
 ```
 This enables either the [medium](https://jakiestfu.github.io/Medium.js/docs/) or [ckeditor](http://ckeditor.com/)
 
+## Helper Functions
+
+TODO
+
+Add info about all helper functions paster tracking export test.csv 2017-01-01 -c /etc/ckan/default/development.ini
 Dependencies
 ------------
 
 * lxml
+
+
+

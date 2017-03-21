@@ -1,4 +1,5 @@
 import logging
+import csv
 from pylons import config
 import ckan.plugins.toolkit as toolkit
 ignore_missing = toolkit.get_validator('ignore_missing')
@@ -104,6 +105,29 @@ def get_featured_org_count():
         return forgscnt
 
 
+def get_tracking(id):
+    data = p.toolkit.get_action('package_show')(
+        data_dict={'id': id,
+                   'include_tracking': True}
+
+    )
+    tracking_summary = data['tracking_summary']
+    return tracking_summary
+
+
+def get_tracking_total():
+    total = []
+    with open('/usr/lib/ckan/default/src/test.csv', 'rb') as csvfile:
+        reader = csv.DictReader(csvfile)
+
+        for row in reader:
+            print(row['total views'])
+            total.append(row['total views'])
+
+    results = map(int, total)
+    return sum(results)
+
+
 class FrontpagePlugin(FrontpagePluginBase):
     p.implements(p.IConfigurer, inherit=True)
     p.implements(p.ITemplateHelpers, inherit=True)
@@ -153,7 +177,9 @@ class FrontpagePlugin(FrontpagePluginBase):
             'get_wysiwyg_editor': get_wysiwyg_editor,
             'get_recent_blog_posts': get_recent_blog_posts,
             'get_frontpage_content': get_frontpage_content,
-            'get_featured_org_count': get_featured_org_count
+            'get_featured_org_count': get_featured_org_count,
+            'get_tracking': get_tracking,
+            'get_tracking_total': get_tracking_total
         }
 
     def after_map(self, map):
