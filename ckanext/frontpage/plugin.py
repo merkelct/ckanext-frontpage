@@ -121,7 +121,7 @@ def get_tracking_total():
         reader = csv.DictReader(csvfile)
 
         for row in reader:
-            print(row['total views'])
+            # print(row['total views'])
             total.append(row['total views'])
 
     results = map(int, total)
