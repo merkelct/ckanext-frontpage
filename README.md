@@ -69,7 +69,14 @@ This enables either the [medium](https://jakiestfu.github.io/Medium.js/docs/) or
 
 ## Helper Functions
 
-TODO
+custom helpers to note available to the templates
+
+get_frontpage_content -- returns the content when the ID is passed for that content
+get_featured_org_count -- get the number or orgs featured
+get_tracking -- returns tracking results for a package ID
+get_tracking_total -- process tracking totals and exports them to file
+
+all helpers will be available as h.<helper name>(<vars>)
 
 Add info about all helper functions paster tracking export test.csv 2017-01-01 -c /etc/ckan/default/development.ini
 Dependencies
