@@ -156,9 +156,6 @@ def get_api_tracking():
     # return response['hits']['total']
 
 
-
-
-
 def get_tracking_total():
     total = []
 
