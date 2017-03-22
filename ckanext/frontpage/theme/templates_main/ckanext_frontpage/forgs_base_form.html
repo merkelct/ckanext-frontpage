@@ -1,0 +1,33 @@
+{% import 'macros/form.html' as form %}
+{% resource 'frontpage/js/orgs.js' %}
+{% set action_url = h.url_for('frontpage_featured_orgs') %}
+{% set cancel_url = h.url_for('frontpage_index') %}
+{% set data = data or {} %}
+{% set allorgs = h.organizations_available(permission='manage_group') %}
+{% set errors = errors or {} %}
+
+<form class="form-horizontal" method="post" action="{{ action_url }}" data-module="basic-form">
+
+  <div class="control-group">
+    <label for="field-private" class="control-label">{{ _('Featured Orgs') }}</label>
+    <div class="controls">
+    <select multiple="multiple" id="mu-select" name="featured_orgs" size="21">
+        {% for option in data %}
+        <option class="selectedOrg" value="{{ option }}" selected>{{ option|upper }}</option>
+        {% endfor %}
+      </select>
+     <select name="new-featured-orgs" multiple size="21">
+        {% for option in allorgs %}
+        <option class="availableOrg" value="{{ option.name }}" >{{ option.name|upper }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+
+  <div class="form-actions">
+
+      <a class="btn pull-left" href="{{ cancel_url }}">{{ _('Cancel') }}</a>
+      <button class="btn btn-primary" name="save" value="save" type="submit">{{ _('Update Config') }}</button>
+  </div>
+
+</form>

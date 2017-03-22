@@ -1,4 +1,5 @@
 import logging
+import csv
 from pylons import config
 import ckan.plugins.toolkit as toolkit
 ignore_missing = toolkit.get_validator('ignore_missing')
@@ -90,12 +91,57 @@ def get_recent_blog_posts(number=5, exclude=None):
     return new_list
 
 
-def get_frontpage_content(page_type='page', page=None ):
+def get_frontpage_list(number=5, exclude=None):
+    frontpage_list = p.toolkit.get_action('ckanext_frontpage_list')(
+        None, {'order_publish_date': True, 'private': False,
+               'page_type': 'page'}
+    )
+    new_list = []
+    for page in frontpage_list:
+        if exclude and page['name'] == exclude:
+            continue
+        new_list.append(page)
+        if len(new_list) == number:
+            break
+
+    return new_list
+
+
+def get_frontpage_content(page_type='page', page=None):
     page_content = p.toolkit.get_action('ckanext_frontpage_show')(
         None, {'page_type': page_type, 'page': page}
     )
 
     return page_content
+
+
+def get_featured_org_count():
+        forgs = config['ckan.featured_orgs'].split(' ')
+        forgscnt = len(forgs)
+        return forgscnt
+
+
+def get_tracking(id):
+    data = p.toolkit.get_action('package_show')(
+        data_dict={'id': id,
+                   'include_tracking': True}
+
+    )
+    tracking_summary = data['tracking_summary']
+    return tracking_summary
+
+
+def get_tracking_total():
+    total = []
+    with open('/usr/lib/ckan/default/src/test.csv', 'rb') as csvfile:
+        reader = csv.DictReader(csvfile)
+
+        for row in reader:
+            # print(row['total views'])
+            total.append(row['total views'])
+
+    results = map(int, total)
+    return sum(results)
 
 
 class FrontpagePlugin(FrontpagePluginBase):
@@ -124,6 +170,19 @@ class FrontpagePlugin(FrontpagePluginBase):
         p.toolkit.add_resource('theme/resources', 'frontpage-theme')
         p.toolkit.add_public_directory(config, 'theme/public')
 
+    def update_config_schema(self, schema):
+
+        ignore_missing = toolkit.get_validator('ignore_missing')
+
+        schema.update({
+            # This is an existing CKAN core configuration option, we are just
+            # making it available to be editable at runtime
+            'ckan.featured_orgs': [ignore_missing]
+
+        })
+
+        return schema
+
     def configure(self, config):
         return
 
@@ -133,7 +192,11 @@ class FrontpagePlugin(FrontpagePluginBase):
             'render_content': render_content,
             'get_wysiwyg_editor': get_wysiwyg_editor,
             'get_recent_blog_posts': get_recent_blog_posts,
-            'get_frontpage_content': get_frontpage_content
+            'get_frontpage_content': get_frontpage_content,
+            'get_featured_org_count': get_featured_org_count,
+            'get_tracking': get_tracking,
+            'get_tracking_total': get_tracking_total,
+            'get_frontpage_list': get_frontpage_list
         }
 
     def after_map(self, map):
@@ -164,6 +227,8 @@ class FrontpagePlugin(FrontpagePluginBase):
                     action='frontpage_delete', ckan_icon='delete', controller=controller)
         map.connect('frontpage_edit', '/frontpage_edit{page:/.*|}',
                     action='frontpage_edit', ckan_icon='edit', controller=controller)
+        map.connect('frontpage_featured_orgs', '/featured_orgs.html}',
+                    action='frontpage_featured_orgs', ckan_icon='edit', controller=controller)
         map.connect('frontpage_index', '/frontpage',
                     action='frontpage_index', ckan_icon='file', controller=controller, highlight_actions='frontpage_edit frontpage_index frontpage_show')
         map.connect('frontpage_show', '/frontpage{page:/.*|}',
