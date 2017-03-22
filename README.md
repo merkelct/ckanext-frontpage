@@ -1,11 +1,12 @@
 ckanext-frontpage
 =============
 
-This extension gives you an easy way to add simple frontpage to CKAN.
+This extension gives you an easy way to add simple frontpage to CKAN. THis extension should be installed
+with the [ckanext-monsanto theme](https://github.com/MonsantoCo/ckanext-monsanto)
 
 By default you can add frontpage to the main CKAN menu.
 
-Works for ckan>=2.3
+Works for ckan>=2.5
 
 ## Installation
 
@@ -23,30 +24,6 @@ ckan.plugins = frontpage
 ```
 
 ## Configuration
-
-
-Extra config options allow you to control the creation of extra frontpage against groups and organizations.
-
-To swich on this behaviour, to your config add:
-
-```
-ckanext.frontpage.organization = True
-ckanext.frontpage.group = True
-```
-
-These options are False by default and this feature is experimental.
-
-
-This module also gives you a quick way to remove default elements from the CKAN menu and you may need todo this
-in order for you to have space for the new items you add.  These options are:
-
-```
-ckanext.frontpage.about_menu = False
-ckanext.frontpage.group_menu = False
-ckanext.frontpage.organization_menu = False
-```
-
-By default these are all set to True, like on a default install.
 
 To enable HTML output for the frontpage (along with Markdown), add the following to your config:
 
@@ -67,7 +44,36 @@ ckanext.frontpage.editor = ckeditor
 ```
 This enables either the [medium](https://jakiestfu.github.io/Medium.js/docs/) or [ckeditor](http://ckeditor.com/)
 
+## Helper Functions
+
+custom helpers available to the templates
+
+``` 
+get_frontpage_content -- returns the content when the ID is passed for that content
+get_frontpage_list -- retuns all non private content defaults to 5 but you can pass a number this will order them by publish data and will exclude entries without one
+get_featured_org_count -- get the number or orgs featured
+get_tracking -- returns tracking results for a package ID
+get_tracking_total -- process tracking totals and exports them to file 
+```
+
+all helpers will be available as h.<helper name>(<vars>)
+
+Add info about all helper functions paster tracking export test.csv 2017-01-01 -c /etc/ckan/default/development.ini
+
+##Tracking and Main Page View Count
+
+A cron has to be setup like so to run at an interval you would like you pageview tracking to be updated.
+
+```/usr/lib/ckan/default/bin/paster --plugin=ckan tracking update -c /etc/ckan/default/development.ini && /usr/lib/ckan/default/bin/paster --plugin=ckan search-index rebuild -r -c /etc/ckan/default/development.ini```
+ 
+ you must also have a cron nightly to update overall tracking and push the file to the path below
+ 
+ ```paster tracking export /usr/lib/ckan/default/src/pagewiecount30day.csv 2017-01-01 -c /etc/ckan/default/development.ini```
+
 Dependencies
 ------------
 
 * lxml
+
+
+

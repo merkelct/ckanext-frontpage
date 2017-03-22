@@ -5,12 +5,12 @@ version = '0.1'
 setup(
 	name='ckanext-frontpage',
 	version=version,
-	description='Basic CMS extension for ckan',
+	description='Frontpage CMS control for ckan',
 	long_description='',
 	classifiers=[], # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
 	keywords='',
-	author='David Raznick',
-	author_email='david.raznick@gokfn.org',
+	author='Corey Merkel',
+	author_email='corey.merkel@ogsystems.com',
 	url='',
 	license='',
 	packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),

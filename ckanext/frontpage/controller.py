@@ -1,6 +1,12 @@
 import ckan.plugins as p
 import ckan.lib.helpers as helpers
+import ckan.lib.base as base
+from paste.util.multidict import MultiDict
+
 from pylons import config
+c = base.c
+request = base.request
+_ = base._
 
 _ = p.toolkit._
 
@@ -313,9 +319,44 @@ class FrontpageController(p.toolkit.BaseController):
             p.toolkit.abort(404, _('Group not found'))
         return p.toolkit.render('ckanext_frontpage/confirm_delete.html', {'page': page})
 
-
     def blog_edit(self, page=None, data=None, errors=None, error_summary=None):
         return self.frontpage_edit(page=page, data=data, errors=errors, error_summary=error_summary, page_type='blog')
+
+    def frontpage_featured_orgs(self, path=None, data=None, errors=None, error_summary=None):
+
+        if p.toolkit.request.method == 'POST' and not data:
+            data = MultiDict(p.toolkit.request.POST)
+            data = data.getall('featured_orgs')
+            forgs = ''
+            for i in range(len(data)):
+                data[i] = data[i].encode('utf-8')
+                forgs += data[i]
+                if i < len(data)-1:
+                    forgs += ' '
+
+            try:
+                junk = p.toolkit.get_action('config_option_update')(
+                    {'user': c.user}, {'ckan.featured_orgs': forgs}
+                )
+            except p.toolkit.ValidationError, e:
+                errors = e.error_dict
+                error_summary = e.error_summary
+                return self.frontpage_featured_orgs('', data,
+                                       errors, error_summary)
+            p.toolkit.redirect_to(p.toolkit.url_for('frontdoor'))
+
+        if not data:
+            data = config['ckan.featured_orgs'].split(' ')
+
+        errors = errors or {}
+        error_summary = error_summary or {}
+
+        form_snippet = config.get('ckanext.frontpage.form', 'ckanext_frontpage/forgs_base_form.html')
+
+        vars = {'data': data, 'errors': errors,
+                'error_summary': error_summary, 'form_snippet': form_snippet}
+
+        return p.toolkit.render('ckanext_frontpage/featured_orgs.html', extra_vars=vars)
 
     def frontpage_edit(self, page=None, data=None, errors=None, error_summary=None, page_type='frontpage'):
         if page:
@@ -345,8 +386,10 @@ class FrontpageController(p.toolkit.BaseController):
                 error_summary = e.error_summary
                 return self.frontpage_edit('/' + page, data,
                                        errors, error_summary, page_type=page_type)
-            p.toolkit.redirect_to(p.toolkit.url_for('%s_show' % page_type,
-                                                    page='/' + _page['name']))
+            url = p.toolkit.url_for('%s_show' % page_type,
+                              page='/' + _page['name'])
+            newURL = url.replace('/frontdoor', '')
+            p.toolkit.redirect_to(newURL)
 
         try:
             p.toolkit.check_access('ckanext_frontpage_update', {'user': p.toolkit.c.user or p.toolkit.c.author})
