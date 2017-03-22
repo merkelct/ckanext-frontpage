@@ -50,6 +50,7 @@ custom helpers available to the templates
 
 ``` 
 get_frontpage_content -- returns the content when the ID is passed for that content
+get_frontpage_list -- retuns all non private content defaults to 5 but you can pass a number this will order them by publish data and will exclude entries without one
 get_featured_org_count -- get the number or orgs featured
 get_tracking -- returns tracking results for a package ID
 get_tracking_total -- process tracking totals and exports them to file 

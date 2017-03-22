@@ -386,8 +386,10 @@ class FrontpageController(p.toolkit.BaseController):
                 error_summary = e.error_summary
                 return self.frontpage_edit('/' + page, data,
                                        errors, error_summary, page_type=page_type)
-            p.toolkit.redirect_to(p.toolkit.url_for('%s_show' % page_type,
-                                                    page='/' + _page['name']))
+            url = p.toolkit.url_for('%s_show' % page_type,
+                              page='/' + _page['name'])
+            newURL = url.replace('/frontdoor', '')
+            p.toolkit.redirect_to(newURL)
 
         try:
             p.toolkit.check_access('ckanext_frontpage_update', {'user': p.toolkit.c.user or p.toolkit.c.author})

@@ -91,7 +91,23 @@ def get_recent_blog_posts(number=5, exclude=None):
     return new_list
 
 
-def get_frontpage_content(page_type='page', page=None ):
+def get_frontpage_list(number=5, exclude=None):
+    frontpage_list = p.toolkit.get_action('ckanext_frontpage_list')(
+        None, {'order_publish_date': True, 'private': False,
+               'page_type': 'page'}
+    )
+    new_list = []
+    for page in frontpage_list:
+        if exclude and page['name'] == exclude:
+            continue
+        new_list.append(page)
+        if len(new_list) == number:
+            break
+
+    return new_list
+
+
+def get_frontpage_content(page_type='page', page=None):
     page_content = p.toolkit.get_action('ckanext_frontpage_show')(
         None, {'page_type': page_type, 'page': page}
     )
@@ -179,7 +195,8 @@ class FrontpagePlugin(FrontpagePluginBase):
             'get_frontpage_content': get_frontpage_content,
             'get_featured_org_count': get_featured_org_count,
             'get_tracking': get_tracking,
-            'get_tracking_total': get_tracking_total
+            'get_tracking_total': get_tracking_total,
+            'get_frontpage_list': get_frontpage_list
         }
 
     def after_map(self, map):
