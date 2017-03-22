@@ -3,11 +3,13 @@ import csv
 from pylons import config
 import ckan.plugins.toolkit as toolkit
 ignore_missing = toolkit.get_validator('ignore_missing')
-
+from datetime import datetime, timedelta
+import requests
 import ckan.plugins as p
 import ckan.lib.helpers as h
 import actions
 import auth
+import json
 
 if p.toolkit.check_ckan_version(min_version='2.5'):
     from ckan.lib.plugins import DefaultTranslation
@@ -131,8 +133,35 @@ def get_tracking(id):
     return tracking_summary
 
 
+def get_api_tracking():
+    d = datetime.today().strftime("%Y-%m-%d" +"T"+"%H:%M")
+    d30 = datetime.today() - timedelta(days=30)
+    d30f = d30.strftime("%Y-%m-%d" +"T"+"%H:%M")
+    esret = {"took": 11,"timed_out": False,"_shards": {"total": 81,"successful": 81,"failed": 0},"hits": {"total": 171957,"max_score": 0,"hits": []}}
+
+    return esret['hits']['total']
+    # url = "http://search-geospatial-platform-34744iniqtaew24wyrukmfwomu.us-east-1.es.amazonaws.com/akanametrics%2A/_search"
+    #
+    # payload = "{\n  \"size\": 0,\n  \"query\": {\n    \"range\": {\n      \"request-date\": {\n        " \
+    #          "\"gte\": \"" + d30f +"\",\n        \"lte\": \"" + d + "\"\n      }\n    }\n  }\n}"
+    #
+    # headers = {
+    #     'content-type': "application/json",
+    #     'cache-control': "no-cache",
+    #     'postman-token': "f932d5c8-b797-828f-f575-7d072d51211e"
+    # }
+    #
+    # response = requests.request("POST", url, data=payload, headers=headers)
+    #
+    # return response['hits']['total']
+
+
+
+
+
 def get_tracking_total():
     total = []
+
     with open('/usr/lib/ckan/default/src/test.csv', 'rb') as csvfile:
         reader = csv.DictReader(csvfile)
 
@@ -141,7 +170,8 @@ def get_tracking_total():
             total.append(row['total views'])
 
     results = map(int, total)
-    return sum(results)
+    apicount = get_api_tracking()
+    return sum(results) + apicount
 
 
 class FrontpagePlugin(FrontpagePluginBase):
