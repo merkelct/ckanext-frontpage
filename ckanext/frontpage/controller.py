@@ -349,7 +349,7 @@ class FrontpageController(p.toolkit.BaseController):
                     error_summary = e.error_summary
                     return self.frontpage_featured_orgs('', data,
                                            errors, error_summary)
-                p.toolkit.redirect_to(p.toolkit.url_for('frontdoor'))
+                p.toolkit.redirect_to('/frontpage')
 
         if not data:
             data = config['ckan.featured_orgs'].split(' ')
