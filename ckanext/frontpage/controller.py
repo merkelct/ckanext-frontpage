@@ -327,23 +327,29 @@ class FrontpageController(p.toolkit.BaseController):
         if p.toolkit.request.method == 'POST' and not data:
             data = MultiDict(p.toolkit.request.POST)
             data = data.getall('featured_orgs')
-            forgs = ''
-            for i in range(len(data)):
-                data[i] = data[i].encode('utf-8')
-                forgs += data[i]
-                if i < len(data)-1:
-                    forgs += ' '
+            notification = '';
 
-            try:
-                junk = p.toolkit.get_action('config_option_update')(
-                    {'user': c.user}, {'ckan.featured_orgs': forgs}
-                )
-            except p.toolkit.ValidationError, e:
-                errors = e.error_dict
-                error_summary = e.error_summary
-                return self.frontpage_featured_orgs('', data,
-                                       errors, error_summary)
-            p.toolkit.redirect_to(p.toolkit.url_for('frontdoor'))
+            if len(data) < 1:
+                notification = 'At least one featured org must be selected'
+                print(notification)
+            else:
+                forgs = ''
+                for i in range(len(data)):
+                    data[i] = data[i].encode('utf-8')
+                    forgs += data[i]
+                    if i < len(data)-1:
+                        forgs += ' '
+
+                try:
+                    junk = p.toolkit.get_action('config_option_update')(
+                        {'user': c.user}, {'ckan.featured_orgs': forgs}
+                    )
+                except p.toolkit.ValidationError, e:
+                    errors = e.error_dict
+                    error_summary = e.error_summary
+                    return self.frontpage_featured_orgs('', data,
+                                           errors, error_summary)
+                p.toolkit.redirect_to(p.toolkit.url_for('frontdoor'))
 
         if not data:
             data = config['ckan.featured_orgs'].split(' ')
