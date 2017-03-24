@@ -3,7 +3,7 @@
 {% block subtitle %}{{ _('Edit Page')}} {% endblock %}
 
 {% block primary_content_inner %}
-  {% snippet form_snippet, page=page, data=data, errors=errors %}
+  {% snippet form_snippet, page=page, data=data, errors=errors, msg=msg%}
 {% endblock %}
 
 {% block main_content %}

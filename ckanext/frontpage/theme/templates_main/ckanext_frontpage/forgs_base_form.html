@@ -7,20 +7,26 @@
 {% set errors = errors or {} %}
 
 <form class="form-horizontal" method="post" action="{{ action_url }}" data-module="basic-form">
+    <h1>{{ _('Featured Orgs') }}</h1>
 
   <div class="control-group">
-    <label for="field-private" class="control-label">{{ _('Featured Orgs') }}</label>
     <div class="controls">
-    <select multiple="multiple" id="mu-select" name="featured_orgs" size="21">
-        {% for option in data %}
-        <option class="selectedOrg" value="{{ option }}" selected>{{ option|upper }}</option>
-        {% endfor %}
-      </select>
-     <select name="new-featured-orgs" multiple size="21">
-        {% for option in allorgs %}
-        <option class="availableOrg" value="{{ option.name }}" >{{ option.name|upper }}</option>
-        {% endfor %}
-      </select>
+        <span class="picklist">
+            <span class="picklistHeader">Currently Featured</span>
+            <select multiple="multiple" id="mu-select" name="featured_orgs" size="21">
+                {% for option in data %}
+                <option class="selectedOrg" value="{{ option }}" selected>{{ option|upper }}</option>
+                {% endfor %}
+            </select>
+        </span>
+        <span class="picklist">
+            <span class="picklistHeader">Currently Available</span>
+            <select name="new-featured-orgs" multiple size="21">
+                {% for option in allorgs %}
+                <option class="availableOrg" value="{{ option.name }}" >{{ option.name|upper }}</option>
+                {% endfor %}
+            </select>
+        </span>
     </div>
   </div>
 

@@ -1,7 +1,9 @@
 import ckan.plugins as p
 import ckan.lib.helpers as helpers
 import ckan.lib.base as base
+import ckan.lib.helpers as h
 from paste.util.multidict import MultiDict
+
 
 from pylons import config
 c = base.c
@@ -324,14 +326,15 @@ class FrontpageController(p.toolkit.BaseController):
 
     def frontpage_featured_orgs(self, path=None, data=None, errors=None, error_summary=None):
 
+        msg = ''
+
         if p.toolkit.request.method == 'POST' and not data:
             data = MultiDict(p.toolkit.request.POST)
             data = data.getall('featured_orgs')
-            notification = '';
 
             if len(data) < 1:
-                notification = 'At least one featured org must be selected'
-                print(notification)
+                msg = 'At least one featured org must be selected'
+                h.flash_error(msg, allow_html=False)
             else:
                 forgs = ''
                 for i in range(len(data)):
@@ -360,7 +363,7 @@ class FrontpageController(p.toolkit.BaseController):
         form_snippet = config.get('ckanext.frontpage.form', 'ckanext_frontpage/forgs_base_form.html')
 
         vars = {'data': data, 'errors': errors,
-                'error_summary': error_summary, 'form_snippet': form_snippet}
+                'error_summary': error_summary, 'form_snippet': form_snippet, 'msg': msg}
 
         return p.toolkit.render('ckanext_frontpage/featured_orgs.html', extra_vars=vars)
 
